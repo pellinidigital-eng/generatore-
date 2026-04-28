@@ -75,11 +75,46 @@ const initialForm: GeneratorForm = {
 };
 
 const platformStyles: Record<Platform, string> = {
-  Instagram: "border-pink-300 bg-gradient-to-br from-pink-50 via-orange-50 to-purple-50 text-pink-950 ring-pink-200",
-  TikTok: "border-cyan-300 bg-gradient-to-br from-cyan-50 via-white to-rose-50 text-cyan-950 ring-cyan-200",
-  Facebook: "border-blue-300 bg-blue-50 text-blue-950 ring-blue-200",
-  "YouTube Shorts": "border-red-300 bg-red-50 text-red-950 ring-red-200",
-  LinkedIn: "border-sky-300 bg-sky-50 text-sky-950 ring-sky-200"
+  Instagram: "border-pink-200 bg-gradient-to-br from-white via-pink-50 to-orange-50 text-pink-950",
+  TikTok: "border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white",
+  Facebook: "border-blue-200 bg-blue-50 text-blue-950",
+  "YouTube Shorts": "border-red-200 bg-red-50 text-red-950",
+  LinkedIn: "border-sky-200 bg-sky-50 text-sky-950"
+};
+
+const resultMeta: Record<string, { label: string; description: string }> = {
+  hooks: {
+    label: "Hook",
+    description: "Aperture brevi da usare per catturare attenzione nei primi secondi."
+  },
+  captions: {
+    label: "Caption",
+    description: "Testi completi con apertura, sviluppo, prospettiva e invito finale."
+  },
+  ctas: {
+    label: "CTA",
+    description: "Inviti all'azione diversi, pronti da adattare al tuo obiettivo."
+  },
+  reel: {
+    label: "Reel",
+    description: "Scaletta video con scene, testo a schermo, voce e suggerimento visual."
+  },
+  carousel: {
+    label: "Carosello",
+    description: "Struttura in 7 slide pensata per essere chiara e leggibile da mobile."
+  },
+  ideas: {
+    label: "Idee",
+    description: "Spunti extra per continuare il piano editoriale senza ripartire da zero."
+  },
+  angles: {
+    label: "Angoli",
+    description: "Prospettive diverse per parlare dello stesso tema senza ripetersi."
+  },
+  mistakes: {
+    label: "Errori",
+    description: "Cose da evitare per rendere la comunicazione più credibile."
+  }
 };
 
 export function SocialContentGenerator() {
@@ -110,24 +145,35 @@ export function SocialContentGenerator() {
   }
 
   return (
-    <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.16),transparent_26rem),linear-gradient(135deg,#f8fbff_0%,#eef6ff_48%,#f9fbff_100%)] px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto grid w-full max-w-7xl gap-6 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
-        <section className="rounded-[2rem] border border-white/70 bg-white/90 p-5 shadow-soft backdrop-blur sm:p-7 lg:sticky lg:top-6">
+        <section className="rounded-[2rem] border border-white/80 bg-white/95 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.10)] backdrop-blur sm:p-7 lg:sticky lg:top-6">
           <div className="mb-6">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-gray-600">
-              <span className="h-2 w-2 rounded-full bg-orange-500" />
-              Social Content Studio
+            <div className="mb-4 flex flex-wrap gap-2">
+              <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-[0.7rem] font-black uppercase tracking-[0.14em] text-blue-700">
+                <span className="h-2 w-2 rounded-full bg-blue-600" />
+                AI Social Content Generator
+              </span>
+              <span className="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600">
+                Mobile-first
+              </span>
+              <span className="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600">
+                Instagram, TikTok e Facebook
+              </span>
             </div>
-            <h1 className="text-3xl font-black leading-tight text-gray-950 sm:text-4xl">
+            <h1 className="text-[2rem] font-black leading-[1.05] text-slate-950 sm:text-4xl">
               Generatore Contenuti Social PRO
             </h1>
-            <p className="mt-3 text-base leading-7 text-gray-600">
+            <p className="hidden">
               Inserisci contesto reale: il generatore userà nicchia, offerta, pubblico, problema e risultato per creare una base completa e pronta da adattare.
+            </p>
+            <p className="mt-3 text-base leading-7 text-slate-600">
+              Inserisci pochi dettagli e ottieni hook, caption, reel, caroselli e CTA pronti da adattare.
             </p>
           </div>
 
-          <form className="space-y-5" onSubmit={handleSubmit}>
-            <div className="grid gap-4 sm:grid-cols-2">
+          <form className="space-y-5 rounded-[1.7rem] border border-slate-100 bg-slate-50/70 p-3 sm:p-4" onSubmit={handleSubmit}>
+            <div className="grid gap-3 sm:grid-cols-2">
               <Field label="Nicchia / settore" value={form.niche} placeholder="Es. prodotti digitali, estetica, fitness, consulenza..." onChange={(value) => setFormField(setForm, "niche", value)} />
               <Field label="Prodotto, servizio o idea" value={form.offer} placeholder="Es. generatore contenuti social, trattamento viso, corso online..." onChange={(value) => setFormField(setForm, "offer", value)} />
             </div>
@@ -139,7 +185,7 @@ export function SocialContentGenerator() {
               onChange={(event) => setFormField(setForm, "audience", event.target.value)}
             />
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               <Textarea
                 label="Problema principale del pubblico"
                 placeholder="Es. non sa cosa pubblicare e perde tempo ogni giorno davanti al calendario vuoto"
@@ -155,7 +201,7 @@ export function SocialContentGenerator() {
             </div>
 
             <fieldset>
-              <legend className="mb-3 text-sm font-semibold text-gray-800">Piattaforma</legend>
+              <legend className="mb-3 text-sm font-black text-slate-900">Piattaforma</legend>
               <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
                 {platforms.map((platform) => {
                   const selected = form.platform === platform;
@@ -163,24 +209,34 @@ export function SocialContentGenerator() {
                   return (
                     <button
                       className={cn(
-                        "min-h-16 rounded-2xl border p-3 text-left text-sm font-bold transition focus:outline-none focus:ring-4",
+                        "relative min-h-20 rounded-2xl border p-3 text-left text-sm font-bold shadow-sm transition focus:outline-none focus:ring-4 focus:ring-blue-100",
                         platformStyles[platform],
-                        selected ? "scale-[1.01] shadow-md ring-4" : "hover:-translate-y-0.5 hover:shadow-sm"
+                        selected ? "border-blue-500 bg-blue-50 text-blue-950 shadow-md ring-4 ring-blue-100" : "hover:-translate-y-0.5 hover:shadow-md"
                       )}
                       key={platform}
                       type="button"
                       aria-pressed={selected}
                       onClick={() => setFormField(setForm, "platform", platform)}
                     >
-                      <span className="block text-base">{platform}</span>
-                      <span className="mt-1 block text-xs font-semibold opacity-70">{selected ? "Selezionata" : "Tocca per scegliere"}</span>
+                      <span className="flex items-center gap-3">
+                        <PlatformIcon platform={platform} />
+                        <span>
+                          <span className="block text-base">{platform}</span>
+                          <span className="mt-1 block text-xs font-semibold opacity-70">{selected ? "Selezionata" : "Tocca per scegliere"}</span>
+                        </span>
+                      </span>
+                      {selected ? (
+                        <span className="absolute right-3 top-3 grid h-6 w-6 place-items-center rounded-full bg-blue-600 text-xs font-black text-white">
+                          ✓
+                        </span>
+                      ) : null}
                     </button>
                   );
                 })}
               </div>
             </fieldset>
 
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-3">
               <Select label="Obiettivo" value={form.goal} onChange={(event) => setFormField(setForm, "goal", event.target.value as Goal)}>
                 {goals.map((goal) => <option key={goal} value={goal}>{goal}</option>)}
               </Select>
@@ -192,13 +248,16 @@ export function SocialContentGenerator() {
               </Select>
             </div>
 
-            <Button className="w-full text-base sm:text-lg" disabled={!canSubmit} type="submit">
+            <Button className="min-h-14 w-full rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-sky-500 text-base font-black shadow-[0_18px_36px_rgba(37,99,235,0.28)] hover:from-blue-800 hover:via-blue-700 hover:to-sky-600 sm:text-lg" disabled={!canSubmit} type="submit">
               {isLoading ? <Spinner /> : null}
-              {isLoading ? "Sto creando i tuoi contenuti..." : "Genera contenuti"}
+              {isLoading ? "Sto creando i tuoi contenuti..." : "Genera i miei contenuti"}
             </Button>
+            <p className="text-center text-xs font-semibold leading-5 text-slate-500">
+              Output immediato • Nessun abbonamento • Da usare come base pronta
+            </p>
           </form>
 
-          <p className="mt-5 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-6 text-gray-700">
+          <p className="mt-5 rounded-2xl border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm leading-6 text-slate-700">
             Questo tool genera una base strategica pronta da usare. Per ottenere il massimo risultato, personalizza sempre i testi con il tuo tono, la tua esperienza e il tuo modo di comunicare.
           </p>
         </section>
@@ -209,12 +268,55 @@ export function SocialContentGenerator() {
   );
 }
 
+function PlatformIcon({ platform }: { platform: Platform }) {
+  if (platform === "Instagram") {
+    return (
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white shadow-sm">
+        <svg aria-hidden="true" className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+          <rect x="5" y="5" width="14" height="14" rx="4" stroke="currentColor" strokeWidth="2" />
+          <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="2" />
+          <circle cx="16.5" cy="7.5" r="1" fill="currentColor" />
+        </svg>
+      </span>
+    );
+  }
+
+  if (platform === "TikTok") {
+    return (
+      <span className="relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-2xl bg-slate-950 shadow-sm">
+        <span className="absolute -left-1 top-2 h-7 w-7 rounded-full bg-cyan-400/40" />
+        <span className="absolute -right-1 bottom-2 h-7 w-7 rounded-full bg-pink-500/40" />
+        <svg aria-hidden="true" className="relative h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14.4 4h2.2c.3 2 1.5 3.4 3.4 3.8V10c-1.5-.1-2.7-.6-3.6-1.4v6.1c0 3-2 5.2-5.1 5.2-2.6 0-4.5-1.7-4.5-4.1 0-2.5 2-4.2 4.7-4.2.3 0 .6 0 .9.1V14c-.3-.1-.6-.1-.9-.1-1.2 0-2 .7-2 1.7s.8 1.7 1.9 1.7c1.3 0 2.1-.8 2.1-2.4V4h.9Z" />
+        </svg>
+      </span>
+    );
+  }
+
+  const iconClasses: Record<Exclude<Platform, "Instagram" | "TikTok">, string> = {
+    Facebook: "bg-[#1877F2]",
+    "YouTube Shorts": "bg-[#FF0000]",
+    LinkedIn: "bg-[#0A66C2]"
+  };
+  const label: Record<Exclude<Platform, "Instagram" | "TikTok">, string> = {
+    Facebook: "f",
+    "YouTube Shorts": "▶",
+    LinkedIn: "in"
+  };
+
+  return (
+    <span className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-2xl text-lg font-black text-white shadow-sm", iconClasses[platform])}>
+      {label[platform]}
+    </span>
+  );
+}
+
 function Field({ label, onChange, placeholder, value }: { label: string; onChange: (value: string) => void; placeholder: string; value: string }) {
   return (
-    <label className="block">
-      <span className="mb-2 block text-sm font-semibold text-gray-800">{label}</span>
+    <label className="block rounded-2xl border border-white bg-white p-3 shadow-sm">
+      <span className="mb-2 block text-sm font-black text-slate-900">{label}</span>
       <input
-        className="h-12 w-full rounded-xl border border-gray-200 bg-white px-4 text-base text-gray-950 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-gray-900 focus:ring-4 focus:ring-gray-200"
+        className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-base text-slate-950 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
         placeholder={placeholder}
         value={value}
         onChange={(event) => onChange(event.target.value)}
@@ -238,7 +340,7 @@ function OutputPanel({
 
   if (isLoading) {
     return (
-      <section className="grid min-h-[22rem] place-items-center rounded-[2rem] border border-white/70 bg-white/80 p-8 shadow-soft backdrop-blur">
+      <section className="grid min-h-[22rem] place-items-center rounded-[2rem] border border-white/80 bg-white/90 p-8 shadow-[0_24px_80px_rgba(15,23,42,0.10)] backdrop-blur">
         <div className="text-center">
           <div className="mx-auto"><Spinner size="large" /></div>
           <p className="mt-4 text-xl font-black text-gray-950">Sto creando i tuoi contenuti...</p>
@@ -252,26 +354,26 @@ function OutputPanel({
 
   return (
     <section className="space-y-5 break-words">
-      <div className="rounded-[2rem] border border-gray-900 bg-gray-950 p-5 text-white shadow-soft">
+      <div className="rounded-[2rem] border border-blue-900 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 p-5 text-white shadow-[0_24px_80px_rgba(15,23,42,0.18)]">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-300">Output generato</p>
             <h2 className="mt-1 text-2xl font-black">Piano contenuti pronto da adattare</h2>
           </div>
-          <Button className="bg-white text-gray-950 hover:bg-gray-100" onClick={() => onCopy("all", copyText.all)}>
-            {copiedSection === "all" ? "Copiato" : "Copia tutto"}
+          <Button className="min-h-12 w-full rounded-2xl bg-white text-slate-950 shadow-lg hover:bg-blue-50 sm:w-auto" onClick={() => onCopy("all", copyText.all)}>
+            {copiedSection === "all" ? "Copiato" : "Copia tutto l'output"}
           </Button>
         </div>
       </div>
 
-      <ResultSection copied={copiedSection === "hooks"} title="10 Hook specifici" onCopy={() => onCopy("hooks", copyText.hooks)}>
+      <ResultSection copied={copiedSection === "hooks"} meta={resultMeta.hooks} title="10 Hook specifici" onCopy={() => onCopy("hooks", copyText.hooks)}>
         <NumberedList items={content.hooks} />
       </ResultSection>
 
-      <ResultSection copied={copiedSection === "captions"} title="5 Caption complete" onCopy={() => onCopy("captions", copyText.captions)}>
+      <ResultSection copied={copiedSection === "captions"} meta={resultMeta.captions} title="5 Caption complete" onCopy={() => onCopy("captions", copyText.captions)}>
         <div className="space-y-4">
           {content.captions.map((caption, index) => (
-            <article className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm" key={caption.title}>
+            <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" key={caption.title}>
               <p className="text-sm font-black text-blue-700">Caption {index + 1}</p>
               <h3 className="mt-2 text-lg font-black leading-tight text-gray-950">{caption.title}</h3>
               <p className="mt-3 whitespace-pre-line text-base leading-8 text-gray-700">{caption.text}</p>
@@ -280,15 +382,15 @@ function OutputPanel({
         </div>
       </ResultSection>
 
-      <ResultSection copied={copiedSection === "ctas"} title="5 CTA diverse" onCopy={() => onCopy("ctas", copyText.ctas)}>
+      <ResultSection copied={copiedSection === "ctas"} meta={resultMeta.ctas} title="5 CTA diverse" onCopy={() => onCopy("ctas", copyText.ctas)}>
         <NumberedList items={content.ctas} />
       </ResultSection>
 
-      <ResultSection copied={copiedSection === "reel"} title="Struttura reel / video breve" onCopy={() => onCopy("reel", copyText.reel)}>
+      <ResultSection copied={copiedSection === "reel"} meta={resultMeta.reel} title="Struttura reel / video breve" onCopy={() => onCopy("reel", copyText.reel)}>
         <p className="mb-4 rounded-2xl bg-orange-50 p-4 text-base font-bold text-orange-900">Durata consigliata: {content.reel.duration}</p>
         <div className="space-y-3">
           {content.reel.scenes.map((scene) => (
-            <article className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm" key={scene.time}>
+            <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" key={scene.time}>
               <p className="text-sm font-black text-orange-700">{scene.time}</p>
               <h3 className="mt-2 text-base font-black text-gray-950">{scene.scene}</h3>
               <p className="mt-2 text-sm leading-6 text-gray-700"><strong>Testo a schermo:</strong> {scene.screenText}</p>
@@ -299,10 +401,10 @@ function OutputPanel({
         </div>
       </ResultSection>
 
-      <ResultSection copied={copiedSection === "carousel"} title="Carosello da 7 slide" onCopy={() => onCopy("carousel", copyText.carousel)}>
+      <ResultSection copied={copiedSection === "carousel"} meta={resultMeta.carousel} title="Carosello da 7 slide" onCopy={() => onCopy("carousel", copyText.carousel)}>
         <div className="grid gap-3 sm:grid-cols-2">
           {content.carousel.map((slide) => (
-            <article className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm" key={slide.slide}>
+            <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" key={slide.slide}>
               <p className="text-sm font-black text-gray-950">Slide {slide.slide}: {slide.role}</p>
               <h3 className="mt-2 text-base font-black text-gray-950">{slide.title}</h3>
               <p className="mt-2 text-sm leading-6 text-gray-700">{slide.text}</p>
@@ -312,14 +414,14 @@ function OutputPanel({
         </div>
       </ResultSection>
 
-      <ResultSection copied={copiedSection === "ideas"} title="5 Idee contenuto aggiuntive" onCopy={() => onCopy("ideas", copyText.ideas)}>
+      <ResultSection copied={copiedSection === "ideas"} meta={resultMeta.ideas} title="5 Idee contenuto aggiuntive" onCopy={() => onCopy("ideas", copyText.ideas)}>
         <NumberedList items={content.ideas} />
       </ResultSection>
 
-      <ResultSection copied={copiedSection === "angles"} title="3 Angoli di comunicazione" onCopy={() => onCopy("angles", copyText.angles)}>
+      <ResultSection copied={copiedSection === "angles"} meta={resultMeta.angles} title="3 Angoli di comunicazione" onCopy={() => onCopy("angles", copyText.angles)}>
         <div className="space-y-3">
           {content.angles.map((angle) => (
-            <article className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm" key={angle.title}>
+            <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" key={angle.title}>
               <h3 className="text-base font-black text-gray-950">{angle.title}</h3>
               <p className="mt-2 text-sm leading-6 text-gray-700">{angle.description}</p>
             </article>
@@ -327,19 +429,37 @@ function OutputPanel({
         </div>
       </ResultSection>
 
-      <ResultSection copied={copiedSection === "mistakes"} title="3 Errori da evitare" onCopy={() => onCopy("mistakes", copyText.mistakes)}>
+      <ResultSection copied={copiedSection === "mistakes"} meta={resultMeta.mistakes} title="3 Errori da evitare" onCopy={() => onCopy("mistakes", copyText.mistakes)}>
         <NumberedList items={content.mistakes} />
       </ResultSection>
     </section>
   );
 }
 
-function ResultSection({ children, copied, onCopy, title }: { children: ReactNode; copied: boolean; onCopy: () => void; title: string }) {
+function ResultSection({
+  children,
+  copied,
+  meta,
+  onCopy,
+  title
+}: {
+  children: ReactNode;
+  copied: boolean;
+  meta: { label: string; description: string };
+  onCopy: () => void;
+  title: string;
+}) {
   return (
-    <div className="rounded-[2rem] border border-white/70 bg-white/90 p-4 shadow-soft backdrop-blur sm:p-5">
+    <div className="rounded-[2rem] border border-white/80 bg-white/95 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur sm:p-5">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-2xl font-black leading-tight text-gray-950">{title}</h2>
-        <Button className="w-full shrink-0 sm:w-auto" variant="secondary" onClick={onCopy}>
+        <div>
+          <span className="mb-2 inline-flex rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-blue-700">
+            {meta.label}
+          </span>
+          <h2 className="text-2xl font-black leading-tight text-slate-950">{title}</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-500">{meta.description}</p>
+        </div>
+        <Button className="min-h-11 w-full shrink-0 rounded-2xl border-blue-100 bg-white shadow-sm sm:w-auto" variant="secondary" onClick={onCopy}>
           {copied ? "Copiato" : "Copia questo blocco"}
         </Button>
       </div>
@@ -352,7 +472,7 @@ function NumberedList({ items }: { items: string[] }) {
   return (
     <div className="space-y-3">
       {items.map((item, index) => (
-        <p className="rounded-2xl border border-gray-200 bg-white p-4 text-base font-semibold leading-7 text-gray-900 shadow-sm" key={`${item}-${index}`}>
+        <p className="rounded-2xl border border-slate-200 bg-white p-5 text-base font-semibold leading-8 text-slate-900 shadow-sm" key={`${item}-${index}`}>
           {index + 1}. {item}
         </p>
       ))}
