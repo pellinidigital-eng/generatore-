@@ -38,6 +38,13 @@ type GeneratedContent = {
   mistakes: string[];
 };
 
+type SessionMemory = {
+  hooks: string[];
+  ctas: string[];
+  structures: string[];
+  generation: number;
+};
+
 type StrategicInput = {
   niche: string;
   naturalNiche: string;
@@ -122,8 +129,15 @@ export function SocialContentGenerator() {
   const [content, setContent] = useState<GeneratedContent | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [copiedSection, setCopiedSection] = useState("");
+  const [sessionMemory, setSessionMemory] = useState<SessionMemory>({
+    hooks: [],
+    ctas: [],
+    structures: [],
+    generation: 0
+  });
 
   const canSubmit = Object.values(form).every((value) => value.trim().length > 0) && !isLoading;
+  const inputSpecificity = Object.values(form).filter((value) => value.trim().split(/\s+/).length >= 4).length;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -133,7 +147,9 @@ export function SocialContentGenerator() {
     setIsLoading(true);
 
     window.setTimeout(() => {
-      setContent(generateLocalContent(form));
+      const generated = generateLocalContent(form, sessionMemory);
+      setContent(generated);
+      setSessionMemory((current) => updateSessionMemory(current, generated));
       setIsLoading(false);
     }, 1400);
   }
@@ -255,6 +271,15 @@ export function SocialContentGenerator() {
             <p className="text-center text-xs font-semibold leading-5 text-slate-500">
               Output immediato • Nessun abbonamento • Da usare come base pronta
             </p>
+            {inputSpecificity < 3 ? (
+              <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold leading-6 text-amber-900">
+                Più dettagli inserisci, più gli output saranno mirati. Se resti generico, il tool aggiunge ipotesi strategiche realistiche da personalizzare.
+              </p>
+            ) : (
+              <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold leading-6 text-emerald-900">
+                Buon livello di dettaglio: gli output saranno più facili da adattare al tuo brand e al tuo mercato.
+              </p>
+            )}
           </form>
 
           <p className="mt-5 rounded-2xl border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm leading-6 text-slate-700">
@@ -500,7 +525,7 @@ function setFormField<Key extends keyof GeneratorForm>(
   setForm((current) => ({ ...current, [key]: value }));
 }
 
-function generateLocalContent(form: GeneratorForm): GeneratedContent {
+function generateLocalContent(form: GeneratorForm, memory?: SessionMemory): GeneratedContent {
   const data = normalizeForm(form);
   const content = {
     hooks: buildHooks(data),
@@ -513,7 +538,7 @@ function generateLocalContent(form: GeneratorForm): GeneratedContent {
     mistakes: buildMistakes(data)
   };
 
-  return applyQualityControl(content, data);
+  return diversifyContent(applyQualityControl(content, data), data, memory);
 }
 
 function normalizeForm(form: GeneratorForm) {
@@ -823,6 +848,48 @@ function applyQualityControl(content: GeneratedContent, d: ReturnType<typeof nor
   };
 }
 
+function diversifyContent(content: GeneratedContent, d: ReturnType<typeof normalizeForm>, memory?: SessionMemory): GeneratedContent {
+  if (!memory) return content;
+
+  const generationSeed = seedFrom(d) + memory.generation * 17;
+  const usedHooks = [...memory.hooks];
+  const usedCtas = [...memory.ctas];
+  const hooks = content.hooks.map((hook, index) => {
+    const replacement = getDiverseText(hook, usedHooks, expandedHookLibrary(d), generationSeed + index);
+    usedHooks.push(replacement);
+    return replacement;
+  });
+  const ctas = content.ctas.map((cta, index) => {
+    const replacement = getDiverseText(cta, usedCtas, expandedCtaLibrary(d), generationSeed + index * 3);
+    usedCtas.push(replacement);
+    return replacement;
+  });
+  const captions = content.captions.map((caption, index) => ({
+    ...caption,
+    title: getDiverseText(caption.title, memory.structures, expandedCaptionAngles(), generationSeed + index)
+  }));
+
+  return { ...content, hooks, ctas, captions };
+}
+
+function updateSessionMemory(memory: SessionMemory, content: GeneratedContent): SessionMemory {
+  return {
+    hooks: [...memory.hooks, ...content.hooks].slice(-80),
+    ctas: [...memory.ctas, ...content.ctas].slice(-80),
+    structures: [...memory.structures, ...content.captions.map((caption) => caption.title)].slice(-50),
+    generation: memory.generation + 1
+  };
+}
+
+function getDiverseText(current: string, used: string[], library: string[], seed: number) {
+  const candidates = rotate(library, seed);
+  const tooSimilar = (text: string) => used.some((old) => textSimilarity(text, old) > 0.62);
+
+  if (!tooSimilar(current)) return current;
+
+  return candidates.find((candidate) => !tooSimilar(candidate)) || candidates[0] || current;
+}
+
 function buildCopyText(content: GeneratedContent) {
   const hooks = content.hooks.map((hook, index) => `${index + 1}. ${hook}`).join("\n");
   const captions = content.captions.map((caption, index) => `Caption ${index + 1}: ${caption.title}\n${caption.text}`).join("\n\n");
@@ -832,7 +899,12 @@ function buildCopyText(content: GeneratedContent) {
   const ideas = content.ideas.map((idea, index) => `${index + 1}. ${idea}`).join("\n");
   const angles = content.angles.map((angle, index) => `${index + 1}. ${angle.title}\n${angle.description}`).join("\n\n");
   const mistakes = content.mistakes.map((mistake, index) => `${index + 1}. ${mistake}`).join("\n");
-  const all = [hooks, captions, ctas, reel, carousel, ideas, angles, mistakes].join("\n\n---\n\n");
+  const intro = [
+    "Generatore Contenuti Social PRO",
+    "Output operativo da personalizzare in base al brand, al pubblico e al canale.",
+    "Nota: usa questi contenuti come traccia strategica. I risultati dipendono da costanza, qualità della pubblicazione e mercato."
+  ].join("\n");
+  const all = [intro, hooks, captions, ctas, reel, carousel, ideas, angles, mistakes].join("\n\n---\n\n");
 
   return { all, hooks, captions, ctas, reel, carousel, ideas, angles, mistakes };
 }
@@ -1145,6 +1217,98 @@ function polishSentence(value: string) {
 function countOccurrences(text: string, search: string) {
   if (!search) return 0;
   return text.split(search).length - 1;
+}
+
+function expandedHookLibrary(d: ReturnType<typeof normalizeForm>) {
+  const openers = [
+    "Il problema non è il tempo: è decidere cosa fare quando tutto sembra urgente.",
+    "Prima di cercare una soluzione nuova, guarda il passaggio che continui a saltare.",
+    "Se riparti sempre da capo, forse il piano è troppo fragile.",
+    "La chiarezza arriva quando smetti di voler dire tutto insieme.",
+    "Le persone non si fidano perché capiscono tutto: si fidano quando capiscono il prossimo passo.",
+    "Un piccolo errore ripetuto ogni giorno può pesare più di una grande decisione sbagliata.",
+    "Non serve aggiungere pressione. Serve togliere attrito.",
+    "La domanda giusta non è cosa pubblicare, ma cosa deve capire chi ti ascolta.",
+    "Il primo segnale di confusione è voler cambiare tutto subito.",
+    "Quello che sembra mancanza di motivazione spesso è mancanza di struttura."
+  ];
+  const contexts = [
+    d.strategy.dailyScene,
+    d.strategy.contrastHook,
+    "Prima viene l'identificazione. Poi arriva la proposta.",
+    "Un contenuto forte non spinge: rende evidente una scelta.",
+    "La parte più importante è il momento in cui la persona si riconosce."
+  ];
+
+  return Array.from({ length: 150 }, (_, index) => {
+    const opener = openers[index % openers.length];
+    const context = contexts[Math.floor(index / openers.length) % contexts.length];
+    return index % 3 === 0 ? opener : `${opener} ${context}`;
+  });
+}
+
+function expandedCtaLibrary(d: ReturnType<typeof normalizeForm>) {
+  const verbs = [
+    "Salva questa traccia",
+    "Scrivimi una parola chiave",
+    "Prova questa struttura",
+    "Commenta con il dubbio principale",
+    "Usala come base per il prossimo contenuto",
+    "Condividila con chi deve fare chiarezza",
+    "Parti da questo schema",
+    "Adattala al tuo brand",
+    "Trasformala in un reel breve",
+    "Rileggila prima di pubblicare"
+  ];
+  const endings = [
+    "e rendi più semplice il prossimo passo.",
+    "per evitare di ripartire sempre da zero.",
+    "se vuoi una comunicazione più chiara e meno improvvisata.",
+    "prima di presentare la tua proposta.",
+    "e personalizzala con esempi reali.",
+    "quando vuoi creare contenuti più ordinati.",
+    "senza promettere risultati automatici.",
+    "per costruire fiducia prima della vendita.",
+    `con un linguaggio adatto a ${d.platform}.`,
+    "e scegli una sola azione finale."
+  ];
+
+  return Array.from({ length: 150 }, (_, index) => `${verbs[index % verbs.length]} ${endings[Math.floor(index / verbs.length) % endings.length]}`);
+}
+
+function expandedCaptionAngles() {
+  const base = [
+    "Storytelling pratico",
+    "Problema nascosto",
+    "Errore comune",
+    "Mito da sfatare",
+    "Vendita soft",
+    "Educativa operativa",
+    "Prima e dopo mentale",
+    "Obiezione frequente",
+    "Metodo guidato",
+    "Confronto tra approcci"
+  ];
+
+  return Array.from({ length: 120 }, (_, index) => `${base[index % base.length]} ${Math.floor(index / base.length) + 1}`);
+}
+
+function textSimilarity(a: string, b: string) {
+  const left = tokenSet(a);
+  const right = tokenSet(b);
+  const intersection = [...left].filter((token) => right.has(token)).length;
+  const union = new Set([...left, ...right]).size || 1;
+  return intersection / union;
+}
+
+function tokenSet(value: string) {
+  return new Set(
+    value
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}\s]/gu, " ")
+      .split(/\s+/)
+      .filter((token) => token.length > 3)
+  );
 }
 
 function lowerFirst(value: string) {
