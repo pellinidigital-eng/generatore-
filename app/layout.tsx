@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Generatore Contenuti Social PRO",
-  description: "Genera hook, caption, caroselli e CTA social con AI."
+  description: "Area riservata PelliniDigital per creare hook, caption, reel, caroselli e CTA social a partire dal tuo contesto.",
+  robots: { index: false, follow: false }
 };
 
 export default function RootLayout({
