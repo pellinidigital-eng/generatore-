@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Generatore Contenuti Social PRO",
-  description: "Genera hook, caption, caroselli e CTA social con AI."
+  title: "Generatore Contenuti Social PRO | PelliniDigital",
+  description: "Crea hook, caption, caroselli e CTA per i social partendo dal tuo pubblico, obiettivo e tono di voce."
 };
 
 export default function RootLayout({
@@ -26,7 +26,6 @@ export default function RootLayout({
     <html lang="it">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
-      </body>
     </html>
   );
 }
