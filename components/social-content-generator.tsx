@@ -175,7 +175,7 @@ export function SocialContentGenerator() {
             <div className="mb-4 flex flex-wrap gap-2">
               <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-[0.7rem] font-black uppercase tracking-[0.14em] text-blue-700">
                 <span className="h-2 w-2 rounded-full bg-blue-600" />
-                AI Social Content Generator
+                Social Content Generator
               </span>
               <span className="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600">
                 Mobile-first
