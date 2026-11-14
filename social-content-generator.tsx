@@ -170,9 +170,16 @@ export function SocialContentGenerator() {
   }
 
   async function handleCopy(section: string, text: string) {
-    await navigator.clipboard.writeText(text);
-    setCopiedSection(section);
-    window.setTimeout(() => setCopiedSection(""), 1600);
+    try {
+      if (!navigator.clipboard?.writeText) {
+        throw new Error("Clipboard API non disponibile");
+      }
+      await navigator.clipboard.writeText(text);
+      setCopiedSection(section);
+      window.setTimeout(() => setCopiedSection(""), 1600);
+    } catch {
+      window.prompt("Copia il testo qui sotto:", text);
+    }
   }
 
   return (

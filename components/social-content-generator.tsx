@@ -143,21 +143,23 @@ export function SocialContentGenerator() {
     event.preventDefault();
     if (!canSubmit) return;
 
-    setContent(null);
-    setIsLoading(true);
-
-    window.setTimeout(() => {
-      const generated = generateLocalContent(form, sessionMemory);
-      setContent(generated);
-      setSessionMemory((current) => updateSessionMemory(current, generated));
-      setIsLoading(false);
-    }, 1400);
+    // La generazione attuale è locale e sincrona: non simulare latenza di rete.
+    const generated = generateLocalContent(form, sessionMemory);
+    setContent(generated);
+    setSessionMemory((current) => updateSessionMemory(current, generated));
   }
 
   async function handleCopy(section: string, text: string) {
-    await navigator.clipboard.writeText(text);
-    setCopiedSection(section);
-    window.setTimeout(() => setCopiedSection(""), 1600);
+    try {
+      if (!navigator.clipboard?.writeText) {
+        throw new Error("Clipboard API non disponibile");
+      }
+      await navigator.clipboard.writeText(text);
+      setCopiedSection(section);
+      window.setTimeout(() => setCopiedSection(""), 1600);
+    } catch {
+      window.prompt("Copia il testo qui sotto:", text);
+    }
   }
 
   return (
@@ -168,7 +170,7 @@ export function SocialContentGenerator() {
             <div className="mb-4 flex flex-wrap gap-2">
               <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-[0.7rem] font-black uppercase tracking-[0.14em] text-blue-700">
                 <span className="h-2 w-2 rounded-full bg-blue-600" />
-                AI Social Content Generator
+                Social Content Generator
               </span>
               <span className="inline-flex rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600">
                 Mobile-first
