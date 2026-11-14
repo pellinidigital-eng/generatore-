@@ -143,15 +143,10 @@ export function SocialContentGenerator() {
     event.preventDefault();
     if (!canSubmit) return;
 
-    setContent(null);
-    setIsLoading(true);
-
-    window.setTimeout(() => {
-      const generated = generateLocalContent(form, sessionMemory);
-      setContent(generated);
-      setSessionMemory((current) => updateSessionMemory(current, generated));
-      setIsLoading(false);
-    }, 1400);
+    // La generazione attuale è locale e sincrona: non simulare latenza di rete.
+    const generated = generateLocalContent(form, sessionMemory);
+    setContent(generated);
+    setSessionMemory((current) => updateSessionMemory(current, generated));
   }
 
   async function handleCopy(section: string, text: string) {
